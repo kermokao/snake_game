@@ -12,6 +12,8 @@ image = pygame.transform.scale(original_image, (20, 20))
 running = True
 clock = pygame.time.Clock()
 
+
+
 class Snake:
 
     def __init__(self):
@@ -29,16 +31,41 @@ class Apple:
     def draw(self):
         screen.blit(image, (self.x, self.y))
 
-
 class Game:
-    pass
+    
+    def __init__(self):
+        self.snake = Snake()
+        self.apple = Apple()
 
+    def player_input(self, event):
+        if event.type == pygame.KEYDOWN:
+
+            if event.key == pygame.K_RIGHT:
+                self.snake.change_direction((BLOCK_SIZE, 0))
+
+            elif event.key == pygame.K_LEFT:
+                self.snake.change_direction((-BLOCK_SIZE, 0))
+
+            elif event.key == pygame.K_UP:
+                self.snake.change_direction((0, -BLOCK_SIZE))
+
+            elif event.key == pygame.K_DOWN:
+                self.snake.change_direction((0, BLOCK_SIZE))
+
+    def draw(self):
+        screen.fill((0, 0, 0))
+
+        self.snake.draw()
+        self.apple.draw()
+        pygame.display.update()
+
+game = Game()
 
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-    
-    pygame.display.update()
+
+        game.player_input(event)
 
 pygame.quit()
