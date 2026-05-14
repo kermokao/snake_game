@@ -53,7 +53,6 @@ class Game:
                 self.snake.change_direction((0, BLOCK_SIZE))
 
     def draw(self):
-
         #self.snake.draw()
         self.apple.draw()
         pygame.display.update()
@@ -61,6 +60,9 @@ class Game:
 game = Game()
 
 while running:
+
+    clock.tick(60)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
