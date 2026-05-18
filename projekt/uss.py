@@ -8,6 +8,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snake Game")
 
 BLOCK_SIZE = 20
+SPEED = 10
 
 original_image = pygame.image.load("apple.png")
 image = pygame.transform.scale(original_image, (20, 20))
@@ -21,13 +22,30 @@ class Snake:
         self.snake_body = [[200, 300], [180, 300], [160, 300]]
         self.direction = (BLOCK_SIZE, 0)
         self.grow = False
+        self.reset = False
 
     def change_direction(self, direction):
+        if (
+        self.direction[0] == -direction[0]
+        and self.direction[1] == -direction[1]
+        ):
+            return
+
         self.direction = direction
 
     def apple_collision(self, apple_pos):
         if self.snake_body[0] == apple_pos:
             self.grow = True
+    
+    def snake_colision(self, snake_pos):
+        if self.snake_body[0] == snake_pos:
+            self.reset = True
+    
+    def border_collision(self, border_pos):
+        if self.snake_body[0] == border_pos:
+            self.reset = True
+
+
 
     def move(self):
         head = self.snake_body[0].copy()
@@ -41,6 +59,18 @@ class Snake:
             self.grow = False
         else:
             self.snake_body.pop()
+        
+        if self.snake_body[0] in self.snake_body[1:]:
+            self.reset = True
+
+        if (head[0] >= WIDTH or
+            head[0] < 0 or
+            head[1] >= HEIGHT or
+            head[1] < 0
+        ): 
+            self.reset = True
+
+
 
     def draw(self):
         for part in self.snake_body:
@@ -49,6 +79,9 @@ class Snake:
                 (0, 255, 0),
                 (part[0], part[1], BLOCK_SIZE, BLOCK_SIZE)
             )
+    
+    def snake_respawn(self):
+        self.snake = Snake()
 
 
 class Apple:
@@ -87,10 +120,17 @@ class Game:
         self.snake.move()
 
         apple_pos = [self.apple.x, self.apple.y]
+        snake_pos = [self.snake.snake_body]
+        border_pos = [HEIGHT, WIDTH]
         self.snake.apple_collision(apple_pos)
+        self.snake.snake_colision(snake_pos)
+        self.snake.border_collision(border_pos)
 
         if self.snake.grow:
             self.apple.respawn()
+
+        if self.snake.reset:
+            self.snake = Snake()
 
     def draw(self):
         screen.fill((0, 0, 0))
@@ -102,7 +142,7 @@ class Game:
 game = Game()
 
 while running:
-    clock.tick(10)
+    clock.tick(8)
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
