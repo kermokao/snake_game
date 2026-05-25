@@ -41,14 +41,6 @@ class Snake:
     def apple_collision(self, apple_pos):
         if self.snake_body[0] == apple_pos:
             self.grow = True
-    
-    def snake_colision(self, snake_pos):
-        if self.snake_body[0] == snake_pos:
-            self.reset = True
-    
-    def border_collision(self, border_pos):
-        if self.snake_body[0] == border_pos:
-            self.reset = True
 
     def move(self):
         head = self.snake_body[0].copy()
@@ -136,26 +128,43 @@ class Game:
                 self.snake.change_direction((0, BLOCK_SIZE))
 
     def update(self):
+        global score
         self.snake.move()
 
         apple_pos = [self.apple.x, self.apple.y]
-        snake_pos = [self.snake.snake_body]
-        border_pos = [HEIGHT, WIDTH]
         self.snake.apple_collision(apple_pos)
-        self.snake.snake_colision(snake_pos)
-        self.snake.border_collision(border_pos)
+  
 
         if self.snake.grow:
             self.apple.respawn()
 
         if self.snake.reset:
-            self.snake = Snake()
+            self.game_over()
 
-            global score
-            score = 0
 
         if self.snake.snake_body[0] == apple_pos:
             score += 10
+        
+        if self.snake.reset:
+            self.game_over()
+
+            self.snake = Snake()
+            self.apple = Apple()
+            self.snake.reset = False
+            score = 0
+
+    def game_over(self):
+        screen.fill((0, 0, 0))
+
+        text1 = font.render("GAME OVER", True, (255, 0, 0))
+        text2 = font.render(f"Score: {score}", True, (255, 255, 255))
+
+        screen.blit(text1, (200, 250))
+        screen.blit(text2, (220, 300))
+
+        pygame.display.update()
+
+        pygame.time.delay(2000)
 
     def draw(self):
         screen.fill((0, 0, 0))
@@ -180,6 +189,7 @@ while running:
             running = False
 
         game.player_input(event)
+        
 
     game.draw()
     game.update()
