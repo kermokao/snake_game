@@ -7,7 +7,7 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Snake Game")
 
 BLOCK_SIZE = 20
-SPEED = 20
+SPEED = 10
 
 original_image = pygame.image.load("apple.png")
 image = pygame.transform.scale(original_image, (20, 20))
@@ -16,6 +16,7 @@ score = 0
 font = pygame.font.SysFont(None, 40)
 
 running = True
+
 clock = pygame.time.Clock()
 
 
@@ -96,6 +97,24 @@ class Apple:
         screen.blit(image, (self.x, self.y))
 
 class Game:
+
+    def pause_game(self):
+        paused = True
+
+        while paused:
+
+            self.draw()
+
+            pygame.display.update()
+
+            for event in pygame.event.get():
+
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    quit()
+
+                if event.type == pygame.KEYDOWN:
+                    paused = False
     
     def __init__(self):
         self.snake = Snake()
@@ -149,6 +168,8 @@ class Game:
         pygame.display.update()
 
 game = Game()
+
+game.pause_game()
 
 while running:
 
