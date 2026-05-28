@@ -123,16 +123,16 @@ class Game:
     def player_input(self, event):
         if event.type == pygame.KEYDOWN:
 
-            if event.key == pygame.K_RIGHT and self.snake.direction != ((-BLOCK_SIZE, 0)):
+            if event.key == pygame.K_RIGHT and self.snake.direction != (-BLOCK_SIZE, 0):
                 self.snake.change_direction((BLOCK_SIZE, 0))
 
-            elif event.key == pygame.K_LEFT and self.snake.direction != ((BLOCK_SIZE, 0)):
+            elif event.key == pygame.K_LEFT and self.snake.direction != (BLOCK_SIZE, 0):
                 self.snake.change_direction((-BLOCK_SIZE, 0))
 
-            elif event.key == pygame.K_UP and self.snake.direction != ((0, BLOCK_SIZE)):
+            elif event.key == pygame.K_UP and self.snake.direction != (0, BLOCK_SIZE):
                 self.snake.change_direction((0, -BLOCK_SIZE))
 
-            elif event.key == pygame.K_DOWN and self.snake.direction != ((0, -BLOCK_SIZE)):
+            elif event.key == pygame.K_DOWN and self.snake.direction != (0, -BLOCK_SIZE):
                 self.snake.change_direction((0, BLOCK_SIZE))
 
     def update(self):
